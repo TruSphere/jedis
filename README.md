@@ -6,7 +6,7 @@ Jedis is a blazingly small and sane [Redis](http://github.com/antirez/redis "Red
 
 Jedis was conceived to be EASY to use.
 
-Jedis is fully compatible with redis 2.8.5.
+Jedis is fully compatible with Redis 2.8.5.
 
 ## Community
 
@@ -48,7 +48,7 @@ Or use it as a maven dependency:
 <dependency>
     <groupId>redis.clients</groupId>
     <artifactId>jedis</artifactId>
-    <version>2.4.2</version>
+    <version>2.6.0</version>
     <type>jar</type>
     <scope>compile</scope>
 </dependency>
@@ -76,7 +76,7 @@ Redis cluster [specification](http://redis.io/topics/cluster-spec) (still under 
 Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();
 //Jedis Cluster will attempt to discover cluster nodes automatically
 jedisClusterNodes.add(new HostAndPort("127.0.0.1", 7379));
-JedisCluster jc = new JedisCluster(jedisClusterNode);
+JedisCluster jc = new JedisCluster(jedisClusterNodes);
 jc.set("foo", "bar");
 String value = jc.get("foo");
 ```
