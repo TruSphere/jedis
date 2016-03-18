@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 public class BinaryJedisCluster implements BinaryJedisClusterCommands,
@@ -44,10 +48,27 @@ public class BinaryJedisCluster implements BinaryJedisClusterCommands,
     this.maxRedirections = maxRedirections;
   }
 
+  public BinaryJedisCluster(Set<HostAndPort> jedisClusterNode, int timeout, int maxRedirections,
+      final GenericObjectPoolConfig poolConfig, final SSLSocketFactory sslSocketFactory,
+      final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
+    this.connectionHandler = new JedisSlotBasedConnectionHandler(jedisClusterNode, poolConfig,
+        timeout, sslSocketFactory, sslParameters, hostnameVerifier);
+    this.maxRedirections = maxRedirections;
+  }
+
   public BinaryJedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout,
       int soTimeout, int maxRedirections, final GenericObjectPoolConfig poolConfig) {
     this.connectionHandler = new JedisSlotBasedConnectionHandler(jedisClusterNode, poolConfig,
         connectionTimeout, soTimeout);
+    this.maxRedirections = maxRedirections;
+  }
+
+  public BinaryJedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout,
+      int soTimeout, int maxRedirections, final GenericObjectPoolConfig poolConfig,
+      final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+      final HostnameVerifier hostnameVerifier) {
+    this.connectionHandler = new JedisSlotBasedConnectionHandler(jedisClusterNode, poolConfig,
+        connectionTimeout, soTimeout, sslSocketFactory, sslParameters, hostnameVerifier);
     this.maxRedirections = maxRedirections;
   }
 

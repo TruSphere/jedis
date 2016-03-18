@@ -13,6 +13,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+
 import java.util.Set;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -80,9 +85,24 @@ public class JedisCluster extends BinaryJedisCluster implements JedisClusterComm
     super(jedisClusterNode, timeout, maxRedirections, poolConfig);
   }
 
+  public JedisCluster(Set<HostAndPort> jedisClusterNode, int timeout, int maxRedirections,
+      final GenericObjectPoolConfig poolConfig, final SSLSocketFactory sslSocketFactory,
+      final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier) {
+    super(jedisClusterNode, timeout, maxRedirections, poolConfig,
+        sslSocketFactory, sslParameters, hostnameVerifier);
+  }
+
   public JedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout, int soTimeout,
       int maxRedirections, final GenericObjectPoolConfig poolConfig) {
     super(jedisClusterNode, connectionTimeout, soTimeout, maxRedirections, poolConfig);
+  }
+
+  public JedisCluster(Set<HostAndPort> jedisClusterNode, int connectionTimeout, int soTimeout,
+      int maxRedirections, final GenericObjectPoolConfig poolConfig,
+      final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+      final HostnameVerifier hostnameVerifier) {
+    super(jedisClusterNode, connectionTimeout, soTimeout, maxRedirections, poolConfig,
+        sslSocketFactory, sslParameters, hostnameVerifier);
   }
 
   @Override

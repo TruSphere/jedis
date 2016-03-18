@@ -5,6 +5,10 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 
@@ -16,8 +20,24 @@ public class JedisSlotBasedConnectionHandler extends JedisClusterConnectionHandl
   }
 
   public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes,
+      final GenericObjectPoolConfig poolConfig, int timeout,
+      final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+      final HostnameVerifier hostnameVerifier) {
+    this(nodes, poolConfig, timeout, timeout,
+        sslSocketFactory, sslParameters, hostnameVerifier);
+  }
+
+  public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes,
       final GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout) {
     super(nodes, poolConfig, connectionTimeout, soTimeout);
+  }
+
+  public JedisSlotBasedConnectionHandler(Set<HostAndPort> nodes,
+      final GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout,
+      final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+      final HostnameVerifier hostnameVerifier) {
+    super(nodes, poolConfig, connectionTimeout, soTimeout,
+        sslSocketFactory, sslParameters, hostnameVerifier);
   }
 
   @Override

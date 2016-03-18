@@ -10,6 +10,7 @@ public final class HostAndPortUtil {
   private static List<HostAndPort> redisHostAndPortList = new ArrayList<HostAndPort>();
   private static List<HostAndPort> sentinelHostAndPortList = new ArrayList<HostAndPort>();
   private static List<HostAndPort> clusterHostAndPortList = new ArrayList<HostAndPort>();
+  private static List<HostAndPort> sslClusterHostAndPortList = new ArrayList<HostAndPort>();
 
   private HostAndPortUtil(){
     throw new InstantiationError( "Must not instantiate this class" );
@@ -35,6 +36,13 @@ public final class HostAndPortUtil {
     clusterHostAndPortList.add(new HostAndPort("localhost", 7382));
     clusterHostAndPortList.add(new HostAndPort("localhost", 7383));
     clusterHostAndPortList.add(new HostAndPort("localhost", 7384));
+
+    sslClusterHostAndPortList.add(new HostAndPort("localhost", 8379, true));
+    sslClusterHostAndPortList.add(new HostAndPort("localhost", 8380, true));
+    sslClusterHostAndPortList.add(new HostAndPort("localhost", 8381, true));
+    sslClusterHostAndPortList.add(new HostAndPort("localhost", 8382, true));
+    sslClusterHostAndPortList.add(new HostAndPort("localhost", 8383, true));
+    sslClusterHostAndPortList.add(new HostAndPort("localhost", 8384, true));
 
     String envRedisHosts = System.getProperty("redis-hosts");
     String envSentinelHosts = System.getProperty("sentinel-hosts");
@@ -90,5 +98,9 @@ public final class HostAndPortUtil {
 
   public static List<HostAndPort> getClusterServers() {
     return clusterHostAndPortList;
+  }
+
+  public static List<HostAndPort> getSslClusterServers() {
+    return sslClusterHostAndPortList;
   }
 }

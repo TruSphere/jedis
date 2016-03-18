@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 import redis.clients.jedis.exceptions.JedisConnectionException;
@@ -16,7 +20,15 @@ public abstract class JedisClusterConnectionHandler {
   public JedisClusterConnectionHandler(Set<HostAndPort> nodes,
                                        final GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout) {
     this.cache = new JedisClusterInfoCache(poolConfig, connectionTimeout, soTimeout);
-    initializeSlotsCache(nodes, poolConfig);
+    initializeSlotsCache(nodes, poolConfig, null, null, null);
+  }
+
+  public JedisClusterConnectionHandler(Set<HostAndPort> nodes,
+                                       final GenericObjectPoolConfig poolConfig, int connectionTimeout, int soTimeout,
+                                       final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+                                       final HostnameVerifier hostnameVerifier) {
+    this.cache = new JedisClusterInfoCache(poolConfig, connectionTimeout, soTimeout);
+    initializeSlotsCache(nodes, poolConfig, sslSocketFactory, sslParameters, hostnameVerifier);
   }
 
   abstract Jedis getConnection();
@@ -32,9 +44,12 @@ public abstract class JedisClusterConnectionHandler {
     return cache.getNodes();
   }
 
-  private void initializeSlotsCache(Set<HostAndPort> startNodes, GenericObjectPoolConfig poolConfig) {
+  private void initializeSlotsCache(Set<HostAndPort> startNodes, GenericObjectPoolConfig poolConfig,
+                                    final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+                                    final HostnameVerifier hostnameVerifier) {
     for (HostAndPort hostAndPort : startNodes) {
-      Jedis jedis = new Jedis(hostAndPort.getHost(), hostAndPort.getPort());
+      Jedis jedis = new Jedis(hostAndPort.getHost(), hostAndPort.getPort(), hostAndPort.isSsl(),
+          sslSocketFactory, sslParameters, hostnameVerifier);
       try {
         cache.discoverClusterNodesAndSlots(jedis);
         break;

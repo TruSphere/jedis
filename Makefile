@@ -211,6 +211,56 @@ accept = 127.0.0.1:6390
 connect = 127.0.0.1:6379
 endef
 
+#STUNNEL CLUSTER
+define REDIS_CLUSTER_NODE1_STUNNEL_CONF
+cert = src/test/resources/private.pem
+pid = /tmp/stunnel1.pid
+[redis]
+accept = 127.0.0.1:8379
+connect = 127.0.0.1:7379
+endef
+
+define REDIS_CLUSTER_NODE2_STUNNEL_CONF
+cert = src/test/resources/private.pem
+pid = /tmp/stunnel2.pid
+[redis]
+accept = 127.0.0.1:8380
+connect = 127.0.0.1:7380
+endef
+
+define REDIS_CLUSTER_NODE3_STUNNEL_CONF
+cert = src/test/resources/private.pem
+pid = /tmp/stunnel3.pid
+[redis]
+accept = 127.0.0.1:8381
+connect = 127.0.0.1:7381
+endef
+
+define REDIS_CLUSTER_NODE4_STUNNEL_CONF
+cert = src/test/resources/private.pem
+pid = /tmp/stunnel4.pid
+[redis]
+accept = 127.0.0.1:8382
+connect = 127.0.0.1:7382
+endef
+
+define REDIS_CLUSTER_NODE5_STUNNEL_CONF
+cert = src/test/resources/private.pem
+pid = /tmp/stunnel5.pid
+[redis]
+accept = 127.0.0.1:8383
+connect = 127.0.0.1:7383
+endef
+
+define REDIS_CLUSTER_NODE6_STUNNEL_CONF
+cert = src/test/resources/private.pem
+pid = /tmp/stunnel6.pid
+[redis]
+accept = 127.0.0.1:8384
+connect = 127.0.0.1:7384
+endef
+
+
 export REDIS1_CONF
 export REDIS2_CONF
 export REDIS3_CONF
@@ -229,6 +279,12 @@ export REDIS_CLUSTER_NODE4_CONF
 export REDIS_CLUSTER_NODE5_CONF
 export REDIS_CLUSTER_NODE6_CONF
 export STUNNEL_CONF
+export REDIS_CLUSTER_NODE1_STUNNEL_CONF
+export REDIS_CLUSTER_NODE2_STUNNEL_CONF
+export REDIS_CLUSTER_NODE3_STUNNEL_CONF
+export REDIS_CLUSTER_NODE4_STUNNEL_CONF
+export REDIS_CLUSTER_NODE5_STUNNEL_CONF
+export REDIS_CLUSTER_NODE6_STUNNEL_CONF
 export STUNNEL_BIN
 
 
@@ -266,6 +322,12 @@ cleanup:
 stunnel:
 	@if [ -e "$$STUNNEL_BIN" ]; then\
 	    echo "$$STUNNEL_CONF" | stunnel -fd 0;\
+	    echo "$$REDIS_CLUSTER_NODE1_STUNNEL_CONF" | stunnel -fd 0;\
+	    echo "$$REDIS_CLUSTER_NODE2_STUNNEL_CONF" | stunnel -fd 0;\
+	    echo "$$REDIS_CLUSTER_NODE3_STUNNEL_CONF" | stunnel -fd 0;\
+	    echo "$$REDIS_CLUSTER_NODE4_STUNNEL_CONF" | stunnel -fd 0;\
+	    echo "$$REDIS_CLUSTER_NODE5_STUNNEL_CONF" | stunnel -fd 0;\
+	    echo "$$REDIS_CLUSTER_NODE6_STUNNEL_CONF" | stunnel -fd 0;\
 	fi
 stop:
 	kill `cat /tmp/redis1.pid`
@@ -286,6 +348,12 @@ stop:
 	kill `cat /tmp/redis_cluster_node5.pid` || true
 	kill `cat /tmp/redis_cluster_node6.pid` || true
 	kill `cat /tmp/stunnel.pid` || true
+	kill `cat /tmp/stunnel1.pid` || true
+	kill `cat /tmp/stunnel2.pid` || true
+	kill `cat /tmp/stunnel3.pid` || true
+	kill `cat /tmp/stunnel4.pid` || true
+	kill `cat /tmp/stunnel5.pid` || true
+	kill `cat /tmp/stunnel6.pid` || true
 	rm -f /tmp/sentinel1.conf
 	rm -f /tmp/sentinel2.conf
 	rm -f /tmp/sentinel3.conf
